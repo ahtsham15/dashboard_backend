@@ -24,6 +24,15 @@ class LoginView(APIView):
                 "status": False,
                 "message": serializer.errors
             })
+        email = serializer.data['email']
+        password = serializer.data['password']
+        user = User.objects.filter(email=email).first()
+        print(user)
+        if not user:
+            return Response({
+                "status": False,
+                "message": "User not found"
+            })
         return Response({
             "status": "success",
             "data":{}
