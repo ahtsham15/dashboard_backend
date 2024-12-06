@@ -16,10 +16,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from myfinance.views import UserList,LoginView
+from myfinance.views import UserList,LoginView,IncomeList,IncomeDetail
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/users/', UserList.as_view(), name='user-list'),
     path('api/login/', LoginView.as_view(), name='login'),
+    path('api/incomes/', IncomeList.as_view(), name='income-list'),
+    path('api/incomes/<int:pk>/', IncomeDetail.as_view(), name='income-detail')
 ]
