@@ -1,6 +1,8 @@
 from django.contrib import admin
 from django.urls import path
-from myfinance.views import UserList,LoginView,IncomeList,IncomeDetail,SavingList,SavingDetail
+from myfinance.views.userView import UserList, LoginView
+from myfinance.views.incomeView import IncomeList, IncomeDetail
+from myfinance.views.savingView import SavingList, SavingDetail
 
 urlpatterns = [
     path('admin/', admin.site.urls),
