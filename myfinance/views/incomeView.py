@@ -6,10 +6,7 @@ from myfinance.models import User, Income, Savings, Expense
 from rest_framework import status
 from decimal import Decimal
 from myfinance.serializers import (
-    UserSerializer, 
-    LoginSerializer, 
     IncomeSerializer, 
-    SavingSerializer,
 )
 
 class IncomeList(APIView):
