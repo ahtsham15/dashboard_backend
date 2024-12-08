@@ -101,7 +101,7 @@ class SavingDetail(APIView):
     def patch(self, request, pk):
         try:
             try:
-                saving = Savings.objects.get(id=pk)  # Corrected line
+                saving = Savings.objects.get(id=pk)  
             except Savings.DoesNotExist:
                 return Response({
                     "status": False,
@@ -110,7 +110,7 @@ class SavingDetail(APIView):
         
             user = User.objects.get(id=request.data.get('user'))
         
-            serializer = SavingSerializer(saving, data=request.data, partial=True)  # Note: `partial=True` (corrected casing)
+            serializer = SavingSerializer(saving, data=request.data, partial=True)
         
             amount = request.data.get('amount')
             latest_income = Income.objects.filter(user=user).last()
