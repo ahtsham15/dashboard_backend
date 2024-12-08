@@ -13,10 +13,6 @@ from django.http import HttpResponse
 from io import StringIO
 from decimal import Decimal
 from myfinance.serializers import (
-    UserSerializer, 
-    LoginSerializer, 
-    IncomeSerializer, 
-    SavingSerializer,
     ExpenseSerializer,
 )
 
