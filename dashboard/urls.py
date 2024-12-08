@@ -3,7 +3,7 @@ from django.urls import path
 from myfinance.views.userView import UserList, LoginView
 from myfinance.views.incomeView import IncomeList, IncomeDetail
 from myfinance.views.savingView import SavingList, SavingDetail
-from myfinance.views.expenseView import ExpenseList,ExpenseDetail
+from myfinance.views.expenseView import ExpenseList,ExpenseDetail,ExpenseCSV
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -14,5 +14,6 @@ urlpatterns = [
     path('api/savings/', SavingList.as_view(), name='saving-list'),
     path('api/savings/<int:pk>/', SavingDetail.as_view(), name='saving-detail'),
     path('api/expenses/', ExpenseList.as_view(), name='expense-list'),
-    path('api/expenses/<int:pk>/', ExpenseDetail.as_view(), name='expense-detail')
+    path('api/expenses/<int:pk>/', ExpenseDetail.as_view(), name='expense-detail'),
+    path('api/expenses/csv/<int:pk>/', ExpenseCSV.as_view(), name='expense-csv'),
 ]

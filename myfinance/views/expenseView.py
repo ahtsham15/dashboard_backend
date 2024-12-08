@@ -4,6 +4,13 @@ from rest_framework.response import Response
 from django.db.models import Sum
 from myfinance.models import User, Income, Savings, Expense
 from rest_framework import status
+import csv
+import os
+from django.conf import settings
+from django.http import JsonResponse
+from io import StringIO
+from django.http import HttpResponse
+from io import StringIO
 from decimal import Decimal
 from myfinance.serializers import (
     UserSerializer, 
@@ -192,6 +199,51 @@ class ExpenseDetail(APIView):
                 "status": False,
                 "message": "Expense does not exist"
             }, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({
+                "status": False,
+                "message": f"An error occurred: {str(e)}"
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+class ExpenseCSV(APIView):
+    def get(self, request, pk):
+        try:
+            try:
+                user = User.objects.get(id=pk)
+            except User.DoesNotExist:
+                return Response({
+                    "status": False,
+                    "message": "User does not exist"
+                }, status=status.HTTP_404_NOT_FOUND)
+            expenses = Expense.objects.filter(user=user).order_by('date')
+
+            if not expenses.exists():
+                return Response({
+                    "status": False,
+                    "message": "No expenses found for this user"
+                }, status=status.HTTP_404_NOT_FOUND)
+            csv_buffer = StringIO()
+            writer = csv.writer(csv_buffer)
+            writer.writerow(['Date', 'Category', 'Amount', 'Description'])
+            for expense in expenses:
+                writer.writerow([
+                    expense.date,
+                    expense.category,
+                    expense.amount,
+                    expense.description
+                ])
+            file_name = f"expenses_{user.id}_{expenses.first().date.strftime('%Y_%m')}.csv"
+            file_path = os.path.join(settings.MEDIA_ROOT, 'expense_reports', file_name)
+            os.makedirs(os.path.dirname(file_path), exist_ok=True)
+            with open(file_path, 'w') as csv_file:
+                csv_file.write(csv_buffer.getvalue())
+
+            return JsonResponse({
+                "status": True,
+                "message": "CSV file created successfully",
+                "file_path": file_path
+            }, status=status.HTTP_200_OK)
+
         except Exception as e:
             return Response({
                 "status": False,
