@@ -4,9 +4,17 @@ from myfinance.views.userView import UserList, LoginView
 from myfinance.views.incomeView import IncomeList, IncomeDetail
 from myfinance.views.savingView import SavingList, SavingDetail
 from myfinance.views.expenseView import ExpenseList,ExpenseDetail,ExpenseCSV
+from myfinance.views.userView import RegisterView
+
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/register/', RegisterView.as_view(), name='auth-register'),
     path('api/users/', UserList.as_view(), name='user-list'),
     path('api/login/', LoginView.as_view(), name='login'),
     path('api/incomes/', IncomeList.as_view(), name='income-list'),
