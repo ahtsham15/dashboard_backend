@@ -6,15 +6,30 @@ try:
 except ImportError:
     from rest_framework import serializers
     from myfinance.models import User, Income, Savings, Expense
+    from django.contrib.auth.hashers import make_password
 
     class UserSerializer(serializers.ModelSerializer):
         class Meta:
             model = User
-            fields = '__all__'
+            fields =['id', 'username', 'email', 'password']
 
+
+    class RegisterSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = User
+            fields = ['username', 'email', 'password']
+        def create(self, validated_data):
+            user = User(
+                username=validated_data['username'],
+                email=validated_data['email'],
+                password=make_password(validated_data['password'])  # Hash the password directly
+            )
+            user.save()
+            return user
+        
     class LoginSerializer(serializers.Serializer):
-        email = serializers.EmailField()
-        password = serializers.CharField()
+        email = serializers.EmailField(required=True)
+        password = serializers.CharField(required=True, write_only=True)
 
     class IncomeSerializer(serializers.ModelSerializer):
         user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
