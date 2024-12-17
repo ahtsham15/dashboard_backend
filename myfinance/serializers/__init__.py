@@ -33,13 +33,13 @@ except ImportError:
 
     class IncomeSerializer(serializers.ModelSerializer):
         user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+        description = serializers.CharField(allow_null=True, required=False)
         class Meta:
             model = Income
             fields = '__all__'
 
         date = serializers.DateField(required=False)
         source = serializers.CharField(max_length=100, required=False)
-        description = serializers.CharField(required=False)
         total_income = serializers.DecimalField(max_digits=10, decimal_places=4, required=False)
 
     class SavingSerializer(serializers.ModelSerializer):
