@@ -15,7 +15,6 @@ from decimal import Decimal
 from myfinance.serializers import (
     ExpenseSerializer,
 )
-
 from decimal import Decimal
 
 class ExpenseList(APIView):
@@ -51,7 +50,6 @@ class ExpenseList(APIView):
                 }, status=status.HTTP_404_NOT_FOUND)
 
             total_income = latest_income.total_income
-            # Convert amount to Decimal
             amount = Decimal(amount)
             if total_income < amount:
                 return Response({
