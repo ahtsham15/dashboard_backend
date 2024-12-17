@@ -120,67 +120,42 @@ class ExpenseDetail(APIView):
                     "message": "Expense does not exist"
                 }, status=status.HTTP_404_NOT_FOUND)
             print("User ID:", expense.user_id)
-            if expense.amount < Decimal(request.data.get("amount", 0)):
-                user = User.objects.get(id=request.data.get("user"))
-                serializer = ExpenseSerializer(expense, data=request.data, partial=True)
-                amount = request.data.get("amount")
-                latest_income = Income.objects.filter(user=user).last()
-                print("Income:",latest_income)
-                total_income = latest_income.total_income
-                amount = Decimal(amount)
-                if float(total_income) < float(amount):
-                    return Response({
-                        "status": False,
-                        "message": "Insufficient balance"
-                    }, status=status.HTTP_400_BAD_REQUEST)
-                new_total_income = total_income - amount
-                latest_income.total_income = new_total_income
-                latest_income.save()
-                if serializer.is_valid():
-                    serializer.save()
-                    return Response({
-                        "status": True,
-                        "message": "Expense updated successfully",
-                    }, status=status.HTTP_200_OK)
-                else:
-                    return Response({
-                        "status": False,
-                    "message": serializer.errors
-                }, status=status.HTTP_400_BAD_REQUEST)
+            user = User.objects.get(id=request.data.get('user'))
+            amount = Decimal(request.data.get("amount",0))
+            latest_income = Income.objects.filter(user=user).last()
+            if not latest_income:
+                return Response({
+                    "status":False,
+                    "message":"No Income record found for the user"
+                },status=status.HTTP_400_BAD_REQUEST)
+            total_income = latest_income.total_income
+            amount_difference = amount-total_income
+            if amount_difference > 0 and float(total_income) < float(amount_difference):
+                return Response({
+                    "status": False,
+                    "message": 'Insufficient balance'
+                },status=status.HTTP_400_BAD_REQUEST)
+            
+            new_total_income = total_income - amount_difference
+            latest_income.total_income = new_total_income
+            latest_income.save()
+            serializer = ExpenseSerializer(expense, data=request.data, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                return Response({
+                    "status": True,
+                    "message": "Expense update Successfully"
+                },status=status.HTTP_200_OK)
             else:
-                user = User.objects.get(id=request.data.get("user"))
-                serializer = ExpenseSerializer(expense, data=request.data, partial=True)
-                amount = request.data.get("amount")
-                latest_income = Income.objects.filter(user=user).last()
-                print("Income:",latest_income)
-                total_income = latest_income.total_income
-                amount = Decimal(amount)
-                new_amount = expense.amount - amount
-                new_amount = Decimal(new_amount)
-                if float(total_income) < float(new_amount):
-                    return Response({
-                        "status": False,
-                        "message": "Insufficient balance"
-                    }, status=status.HTTP_400_BAD_REQUEST)
-                new_total_income = total_income + new_amount
-                latest_income.total_income = new_total_income
-                latest_income.save()
-                if serializer.is_valid():
-                    serializer.save()
-                    return Response({
-                        "status": True,
-                        "message": "Expense updated successfully",
-                    }, status=status.HTTP_200_OK)
-                else:
-                    return Response({
-                        "status": False,
-                        "message": serializer.errors
-                }, status=status.HTTP_400_BAD_REQUEST)
+                return Response({
+                    "status": False,
+                    "message": serializer.errors
+                },status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             return Response({
                 "status": False,
-                "message": f"An error occurred: {str(e)}"
-            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+                "message": f"An error occured: {str(e)}"
+            },status=status.HTTP_400_BAD_REQUEST) 
     
     def delete(self, request, pk):
         try:
