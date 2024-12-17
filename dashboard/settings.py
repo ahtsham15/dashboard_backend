@@ -94,7 +94,7 @@ CORS_ALLOW_ALL_ORIGINS = True
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
-    "https://dashboard-frontend-nine-rho.vercel.app/",  # Add your deployed frontend URL here if applicable
+    "https://dashboard-frontend-nine-rho.vercel.app",  # Add your deployed frontend URL here if applicable
 ]
 
 

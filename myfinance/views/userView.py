@@ -21,6 +21,15 @@ class RegisterView(generics.CreateAPIView):
     permission_classes = [AllowAny]
     serializer_class = RegisterSerializer
 
+    def post(self, request, *args, **kwargs):
+        # You can add custom logic here if needed
+        
+        # Call the original `post` method from `CreateAPIView`
+        response = self.create(request, *args, **kwargs)
+
+        # Return the response explicitly
+        return response
+
 class UserList(APIView):
     def get(self, request):
         users = User.objects.all()
