@@ -6,5 +6,5 @@ class Income(models.Model):
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     date = models.DateField()
     source = models.CharField(max_length=100)
-    description = models.TextField()
+    description = models.TextField(blank=True, null=True)
     total_income = models.DecimalField(max_digits=10, decimal_places=4, default=0)
