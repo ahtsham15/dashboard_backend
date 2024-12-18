@@ -1,5 +1,5 @@
 try:
-    from .userSerializer import UserSerializer, LoginSerializer
+    # from .userSerializer import UserSerializer
     from .incomeSerializer import IncomeSerializer
     from .savingSerializer import SavingSerializer
     from .expenseSerializer import ExpenseSerializer
@@ -27,9 +27,13 @@ except ImportError:
             user.save()
             return user
         
-    class LoginSerializer(serializers.Serializer):
-        email = serializers.EmailField(required=True)
-        password = serializers.CharField(required=True, write_only=True)
+    # class LoginSerializer(serializers.Serializer):
+    #     email = serializers.EmailField(required=True)
+    #     password = serializers.CharField(required=True, write_only=True)
+
+    class LoginSerializer(serializers.ModelSerializer):
+            email = serializers.EmailField(required=True)
+            password = serializers.CharField(required=True)
 
     class IncomeSerializer(serializers.ModelSerializer):
         user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
