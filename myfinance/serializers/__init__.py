@@ -32,12 +32,12 @@ except ImportError:
     #     password = serializers.CharField(required=True, write_only=True)
 
     class LoginSerializer(serializers.ModelSerializer):
-        class Meta:
-            moodel =User
-            fields = ['email','password']
-            
         email = serializers.EmailField(required=True)
         password = serializers.CharField(required=True)
+        
+        class Meta:
+            model = User
+            fields = ['email', 'password']
 
     class IncomeSerializer(serializers.ModelSerializer):
         user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
