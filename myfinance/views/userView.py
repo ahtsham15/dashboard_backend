@@ -4,12 +4,9 @@ from rest_framework import status
 from django.db.models import Sum
 from myfinance.models import User, Income, Savings, Expense
 from decimal import Decimal
-from myfinance.serializers import (
-    UserSerializer, 
-    LoginSerializer, 
-)
+from myfinance.serializers import UserSerializer
 from rest_framework import generics
-from myfinance.serializers import RegisterSerializer
+from myfinance.serializers import RegisterSerializer, LoginSerializer
 from rest_framework.permissions import AllowAny
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
